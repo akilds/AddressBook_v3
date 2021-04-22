@@ -24,7 +24,7 @@ class ContactPerson
          this.zip = zip;
          this.email = email;
          this.AddressBookName = AddressBookName;
-      }
+     }
      void changefname(String fname)
      {
       this.firstname = fname;
@@ -73,7 +73,7 @@ class ContactPerson
      {
        return firstname;
      }
-     public String getcity()
+     public String getCity()
      {
        return city;
      }
@@ -83,16 +83,16 @@ public class AddressBookMain
 {
    //Use CASE 2, 3, 4 - Adding, Editing and Deleting a Contact
    //USE CASE 5 - Adding Multiple Contacts
-   static String fname;
-   static String lname;
-   static String phoneno;
-   static String addrs;
-   static String cityy;
-   static String statee;
-   static String zipp;
-   static String mail;
-   static int count =0;
-   static Map<String, ArrayList<ContactPerson>> contact1 = new HashMap<String, ArrayList<ContactPerson>>();
+   public static String fname;
+   public static String lname;
+   public static String phoneno;
+   public static String addrs;
+   public static String cityy;
+   public static String statee;
+   public static String zipp;
+   public static String mail;
+   public static int count =0;
+   public static Map<String, ArrayList<ContactPerson>> contact1 = new HashMap<String, ArrayList<ContactPerson>>();
 	public static void addressBook(String AddressBookname)
    {
       String addressBookname = AddressBookname;
@@ -222,16 +222,15 @@ public class AddressBookMain
          System.out.println("Do you want to continue (Y/N) : ");
          c = sc.next().charAt(0);
      }while(c=='Y'||c=='y');
+	  contact1.put(addressBookname,contact);
   }
 
   //USE CASE 6 - Adding Multiple AddressBook
-  static String sity;
-  static int in = 0;
-  static ArrayList<String> list = new ArrayList<String>();
-  static int count2;
-  static String ccity;
-  static Map<String, ArrayList<String>> dict = new HashMap<String, ArrayList<String>>();
-  static ArrayList<String> list1 = new ArrayList<String>();
+  public static String sity;
+  public static ArrayList<String> list = new ArrayList<String>();
+  public static ArrayList<ContactPerson> person1 = new ArrayList<>();
+  public static int count2;
+  public static Map<String, ArrayList<String>> dict = new HashMap<String, ArrayList<String>>();
   public static void main(String[] args)
   {
     Scanner sc = new Scanner(System.in);
@@ -252,34 +251,42 @@ public class AddressBookMain
     sc.nextLine();
     sity = sc.nextLine();
 
-    contact1.forEach((k,v) -> {
-         if(v.stream().anyMatch(s -> s.city.equals(sity))==true){
-           list.add(v.get(0).getfname());
+    for(Map.Entry<String, ArrayList<ContactPerson>> entry : contact1.entrySet())
+    {
+     ArrayList<ContactPerson> person = entry.getValue();
+     for(ContactPerson per : person){
+      if(per.city.equals(sity)){
+           list.add(per.firstname);
           }
-        });
+     }
+    }
     System.out.println(list);
 
-   //USE CASE 9 - View person in a city
-    contact1.entrySet().forEach(entry -> {
-       ccity = entry.getValue().get(0).getcity();
-       if(entry.getValue().get(0).getcity()==ccity)
-       {
-         list1.add(entry.getValue().get(0).getfname());
-       }
-       dict.put(ccity,list1);
-       });
+    //USE CASE 9 - View person in a city
 
-   dict.entrySet().stream().forEach(entry -> {
-      System.out.println(entry.getKey());
-      System.out.println(entry.getValue());
-   });
+    for(Map.Entry<String, ArrayList<ContactPerson>> entry : contact1.entrySet())
+    {
+      person1 = entry.getValue();
 
-   //USE CASE 10 - Find the count
-     contact1.forEach((k,v) -> {
-         if(v.stream().anyMatch(s -> s.city.equals(sity))==true){
-             count2++;
-          }});
-       System.out.println(count2);
-  }
+      for(ContactPerson p : person1){
+            if(!dict.containsKey(p.getCity())){
+                dict.put(p.getCity(), new ArrayList<>());
+            }
+            dict.get(p.getCity()).add(p.firstname);
+      }
+    }
+    System.out.println(dict);
+
+    //USE CASE 10 - Find the count
+     for(Map.Entry<String, ArrayList<ContactPerson>> entry : contact1.entrySet())
+    {
+     ArrayList<ContactPerson> person = entry.getValue();
+     for(ContactPerson per : person){
+      if(per.city.equals(sity)){
+           count2++;
+          }
+     }
+    }
+    System.out.println(count2);
  }
 }
